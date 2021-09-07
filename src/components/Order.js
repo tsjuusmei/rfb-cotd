@@ -35,10 +35,14 @@ export class Order extends React.Component {
           <TransitionGroup component="span" className="count">
             <CSSTransition
               classNames="count"
-              key={count}
+              key={transitionOptions.key}
               timeout={{ enter: 250, exit: 250 }}
             >
-              <span>{count}</span>
+              <input
+                type="number"
+                value={count}
+                onChange={(event) => this.props.editOrder(event, key)}
+              />
             </CSSTransition>
           </TransitionGroup>
           lbs {fish.name}

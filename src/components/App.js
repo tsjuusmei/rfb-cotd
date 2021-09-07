@@ -80,6 +80,15 @@ class App extends React.Component {
     this.setState({ order });
   };
 
+  editOrder = (event, key) => {
+    // Take a copy of existing state
+    const order = { ...this.state.order };
+    // Add new order to object
+    order[key] = event.currentTarget.value;
+    // Set the new order object to state
+    this.setState({ order });
+  };
+
   removeFromOrder = (key) => {
     const order = { ...this.state.order };
     delete order[key];
@@ -105,6 +114,7 @@ class App extends React.Component {
         <Order
           fishes={this.state.fishes}
           removeFromOrder={this.removeFromOrder}
+          editOrder={this.editOrder}
           order={this.state.order}
         />
         <Inventory

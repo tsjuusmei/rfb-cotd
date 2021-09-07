@@ -10,7 +10,7 @@ import Login from "./Login";
 
 export class Inventory extends React.Component {
   static propTypes = {
-    fishes: PropTypes.array,
+    fishes: PropTypes.object,
     deleteFish: PropTypes.func,
     updateFish: PropTypes.func,
     loadSampleFishes: PropTypes.func,
@@ -31,7 +31,6 @@ export class Inventory extends React.Component {
 
   authHandler = async (authData) => {
     const store = await base.fetch(this.props.storeId, { context: this });
-    console.log(store);
     if (!store.owner) {
       await base.post(`${this.props.storeId}/owner`, {
         data: authData.user.uid,
@@ -42,7 +41,6 @@ export class Inventory extends React.Component {
       uid: authData.user.uid,
       owner: store.owner || authData.user.uid,
     });
-    console.log(authData);
   };
 
   authenticate = (provider) => {
