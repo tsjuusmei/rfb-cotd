@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { formatPrice } from "../helpers";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 export class Order extends React.Component {
   static propTypes = {
@@ -14,44 +14,30 @@ export class Order extends React.Component {
     const fish = this.props.fishes[key];
     const count = this.props.order[key];
     const isAvailable = fish && fish.status === "available";
-    const transitionOptions = {
-      classNames: "order",
-      key,
-      timeout: { enter: 250, exit: 250 },
-    };
     if (!fish) return null;
     if (!isAvailable) {
       return (
-        <CSSTransition {...transitionOptions}>
-          <li key={key}>
-            Sorry, {fish ? fish.name : "this fish"} is no longer available
-          </li>
-        </CSSTransition>
+        <li key={key}>
+          Sorry, {fish ? fish.name : "this fish"} is no longer available
+        </li>
       );
     }
     return (
-      <CSSTransition {...transitionOptions}>
-        <li key={key}>
-          <TransitionGroup component="span" className="count">
-            <CSSTransition
-              classNames="count"
-              key={transitionOptions.key}
-              timeout={{ enter: 250, exit: 250 }}
-            >
-              <input
-                type="number"
-                value={count}
-                onChange={(event) => this.props.editOrder(event, key)}
-              />
-            </CSSTransition>
-          </TransitionGroup>
-          lbs {fish.name}
-          {formatPrice(count * fish.price)}
-          <button onClick={() => this.props.removeFromOrder(key)}>
-            &times;
-          </button>
-        </li>
-      </CSSTransition>
+      <motion.li
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: 60 }}
+        exit={{ opacity: 0, height: 0 }}
+        key={key}
+      >
+        <input
+          type="number"
+          value={count}
+          onChange={(event) => this.props.editOrder(event, key)}
+        />
+        lbs {fish.name}
+        {formatPrice(count * fish.price)}
+        <button onClick={() => this.props.removeFromOrder(key)}>&times;</button>
+      </motion.li>
     );
   };
 
@@ -69,9 +55,9 @@ export class Order extends React.Component {
     return (
       <div className="order-wrap">
         <h2>Order</h2>
-        <TransitionGroup component="ul" className="order">
-          {orderIds.map(this.renderOrder)}
-        </TransitionGroup>
+        <ul className="order">
+          <AnimatePresence>{orderIds.map(this.renderOrder)}</AnimatePresence>
+        </ul>
         <div className="total">
           <strong>Total: {formatPrice(total)}</strong>
         </div>
