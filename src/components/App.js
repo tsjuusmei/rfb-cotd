@@ -83,9 +83,14 @@ class App extends React.Component {
   editOrder = (event, key) => {
     // Take a copy of existing state
     const order = { ...this.state.order };
-    // Add new order to object
-    order[key] = event.currentTarget.value;
-    // Set the new order object to state
+    // If the amount gets below 0, delete the order
+    if (event.currentTarget.value <= 0) {
+      delete order[key];
+    } else {
+      // Update the object
+      order[key] = event.currentTarget.value;
+    }
+    // Set the updated order object to state
     this.setState({ order });
   };
 
